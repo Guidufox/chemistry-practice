@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trucos Esenciales de Química</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de Fuentes y Colores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#0f766e', // Teal-700
+                        'secondary': '#ccfbf1', // Teal-100
+                        'accent': '#d97706', // Amber-700
+                        'darkblue': '#1e40af', // Blue-800
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados para legibilidad y estética */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdfa; /* Teal-50 */
+        }
+        .card {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+        }
+        /* Estilos para KaTeX (evita que los elementos de math se rompan) */
+        .katex-display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 0.5rem 0;
+            text-align: center;
+        }
+        .formula-box {
+            background-color: #e0f2f1; /* Teal-100 */
+            border-left: 5px solid #0f766e; /* primary */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .mnemo {
+            font-weight: bold;
+            color: #d97706; /* accent */
+            background-color: #fef3c7; /* Amber-100 */
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #d97706;
+        }
+    </style>
+    <!-- Carga de KaTeX CSS y JS para renderizar fórmulas matemáticas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrFq2tJ0t0WbTj1C9l6k6H/T5k0h3S5/E+2w==" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-Fp/mKqW8v1B0yYg0k4F9h1D+xXG5G/L7F3zR5W5F9u+4W9g==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-vK1YwJb0S4wFj7C7r2M47r2E8F8M7C4D6W5F7D8G5L5H5H8J4G9K8F7L7J9W4R7" crossorigin="anonymous"></script>
+</head>
+<body class="p-4 md:p-8">
+    <header class="text-center mb-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-primary mb-2">
+            Química ¡El Kit de Supervivencia!
+        </h1>
+        <p class="text-xl text-gray-600">Trucos, Fórmulas y Ayudas de IA para Estequiometría, REDOX y Conceptos Clave.</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- SECCIÓN 1: THETA y NORMALIDAD -->
+        <div class="card bg-white p-6 rounded-xl border-t-4 border-primary lg:col-span-1">
+            <h2 class="text-2xl font-bold text-primary mb-4 flex items-center">
+                $\theta$ (Theta) & Normalidad
+                <span class="ml-2 text-3xl">🧪</span>
+            </h2>
+            <p class="mb-4 text-gray-700 font-semibold">
+                $\theta$ es clave para $N$ ($N = M \cdot \theta$).
+            </p>
+
+            <div class="space-y-4 text-sm">
+                <p class="p-2 bg-secondary rounded-lg">
+                    **Ácidos (H...)**: $\theta = \text{Nº de H}$. (Ej: $\text{H}_3\text{PO}_4 \rightarrow \theta = 3$)
+                </p>
+                <p class="p-2 bg-secondary rounded-lg">
+                    **Bases (...OH)**: $\theta = \text{Nº de (OH)}$. (Ej: $\text{Ca}(\text{OH})_2 \rightarrow \theta = 2$)
+                </p>
+                <p class="p-2 bg-secondary rounded-lg">
+                    **Sales**: $\theta = \text{Carga total del metal}$. (Ej: $\text{Fe}_2(\text{SO}_4)_3 \rightarrow \text{Fe}^{+3} \rightarrow \theta = 3$)
+                </p>
+            </div>
+
+            <div class="mt-6 p-4 bg-primary/10 rounded-xl border-l-4 border-primary">
+                <h3 class="font-bold text-xl text-primary mb-3">✨ Calculadora de $\theta$ con IA</h3>
+                <input type="text" id="formulaInput" placeholder="Ej: H2SO4 o Al(OH)3" class="w-full p-2 border border-primary/50 rounded-lg mb-2 text-sm focus:ring-primary focus:border-primary">
+                <button id="calculateThetaBtn" class="w-full bg-primary text-white font-bold py-2 rounded-lg text-sm hover:bg-primary/80 transition duration-150">
+                    Calcular y Explicar $\theta$
+                </button>
+                <div id="thetaResult" class="mt-3 text-gray-800 bg-white p-3 rounded-lg border border-primary/20 min-h-[50px] text-xs">
+                    <p class="text-gray-500">Introduce una fórmula y haz clic para ver el cálculo paso a paso.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: REDOX y ELECTROQUÍMICA -->
+        <div class="card bg-white p-6 rounded-xl border-t-4 border-accent lg:col-span-1">
+            <h2 class="text-2xl font-bold text-accent mb-4 flex items-center">
+                REDOX y Leyes de Faraday
+                <span class="ml-2 text-3xl">⚡</span>
+            </h2>
+
+            <h3 class="font-semibold text-lg text-accent mb-2">1. Cálculo de Voltaje</h3>
+            <div class="formula-box bg-amber-50">
+                <p class="font-mono text-center text-lg text-accent">
+                    $$E^\circ_{\text{celda}} = E^\circ_{\text{MAYOR}} - E^\circ_{\text{MENOR}}$$
+                </p>
+            </div>
+            <p class="text-xs italic text-gray-600 mb-4">
+                El $E^\circ$ **MENOR** es el Ánodo (Oxidación).
+            </p>
+
+            <h3 class="font-semibold text-lg text-accent mb-2">2. Leyes de Faraday</h3>
+            <div class="formula-box bg-amber-50">
+                 <p class="font-mono text-center text-lg text-accent">
+                    $$m = \frac{M \cdot I \cdot t}{n \cdot F}$$
+                </p>
+            </div>
+            <p class="text-xs font-bold text-red-600 mb-4">
+                ¡IMPORTANTE!: $t$ debe estar en **segundos (s)** y $F = 96500 \text{ C/mol e}^-$.
+            </p>
+
+            <div class="mt-6 p-4 bg-accent/10 rounded-xl border-l-4 border-accent">
+                <h3 class="font-bold text-xl text-accent mb-3">✨ Generador de Preguntas REDOX</h3>
+                <button id="generateRedoxQuizBtn" class="w-full bg-accent text-white font-bold py-2 rounded-lg text-sm hover:bg-accent/80 transition duration-150">
+                    Generar Problema de Práctica
+                </button>
+                <div id="quizResult" class="mt-3 text-gray-800 bg-white p-3 rounded-lg border border-accent/20 min-h-[50px] text-xs">
+                    <p class="text-gray-500">Haz clic para generar una pregunta de REDOX/Electrólisis con su solución.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 3: ESTEQUIOMETRÍA y FÓRMULAS -->
+        <div class="card bg-white p-6 rounded-xl border-t-4 border-darkblue lg:col-span-1">
+            <h2 class="text-2xl font-bold text-darkblue mb-4 flex items-center">
+                Estequiometría & Fórmulas
+                <span class="ml-2 text-3xl">📐</span>
+            </h2>
+
+            <h3 class="font-semibold text-lg text-darkblue mb-2">1. Conversión Moles/Masa</h3>
+            <div class="formula-box bg-blue-50">
+                 <p class="font-mono text-center text-lg text-darkblue">
+                    $$\text{Moles} = \frac{\text{Masa (g)}}{\text{Masa Molar (PM)}}$$
+                </p>
+            </div>
+            <p class="text-xs font-bold text-red-600 mb-4">
+                ¡Recuerda! Siempre convierte $mL$ a $L$ si usas Molaridad ($M$).
+            </p>
+            
+            <h3 class="font-semibold text-lg text-darkblue mb-2">2. Fórmulas Empíricas y Moleculares</h3>
+            <ol class="list-decimal ml-4 text-sm text-gray-700 space-y-1 mb-4">
+                <li>**% a g:** Asume 100 g.</li>
+                <li>**g a moles:** Divide g por el PM.</li>
+                <li>**FE:** Divide todos los moles por el menor.</li>
+                <li>**FM:** $\text{Factor} = \frac{\text{PM Molecular}}{\text{PM Empírico}}$</li>
+            </ol>
+
+            <div class="mt-6 p-4 bg-darkblue/10 rounded-xl border-l-4 border-darkblue">
+                <h3 class="font-bold text-xl text-darkblue mb-3">✨ Calculadora de Fórmulas Empíricas</h3>
+                <input type="text" id="empiricalFormulaInput" placeholder="Ej: 40.9%C, 4.59%H, 54.51%O" class="w-full p-2 border border-darkblue/50 rounded-lg mb-2 text-sm focus:ring-darkblue focus:border-darkblue">
+                <button id="calculateEmpiricalBtn" class="w-full bg-darkblue text-white font-bold py-2 rounded-lg text-sm hover:bg-darkblue/80 transition duration-150">
+                    Calcular Fórmula Empírica
+                </button>
+                <div id="empiricalResult" class="mt-3 text-gray-800 bg-white p-3 rounded-lg border border-darkblue/20 min-h-[50px] text-xs">
+                    <p class="text-gray-500">Introduce los porcentajes y calcula la fórmula empírica (usa el formato "%C, %H, ...").</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: PROPIEDADES PERIÓDICAS Y ENLACES (En dos columnas) -->
+        <div class="card bg-white p-6 rounded-xl border-t-4 border-green-600 lg:col-span-3">
+            <h2 class="text-2xl font-bold text-green-600 mb-4 flex items-center">
+                Estructura Atómica y Enlaces
+                <span class="ml-2 text-3xl">⚛️</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Columna 1: Propiedades Periódicas -->
+                <div>
+                    <h3 class="font-semibold text-lg text-green-700 mb-2">1. Tendencias Periódicas</h3>
+                    <table class="w-full text-sm mt-2 border border-green-200 rounded-lg overflow-hidden">
+                        <thead>
+                            <tr class="bg-green-100 text-green-800">
+                                <th class="p-2 text-left">Propiedad</th>
+                                <th class="p-2">Periodo ($\rightarrow$)</th>
+                                <th class="p-2">Grupo ($\downarrow$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-2 font-medium">Radio Atómico (Tamaño)</td>
+                                <td class="p-2 text-red-600">Disminuye ($\downarrow$)</td>
+                                <td class="p-2 text-primary">Aumenta ($\uparrow$)</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-2 font-medium">Energía de Ionización ($\text{EI}$)</td>
+                                <td class="p-2 text-primary">Aumenta ($\uparrow$)</td>
+                                <td class="p-2 text-red-600">Disminuye ($\downarrow$)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-medium">Electronegatividad ($\text{EN}$)</td>
+                                <td class="p-2 text-primary">Aumenta ($\uparrow$)</td>
+                                <td class="p-2 text-red-600">Disminuye ($\downarrow$)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs mt-2 italic text-gray-600">
+                        Flúor (F) es el más electronegativo; Cesio (Cs) tiene la menor Energía de Ionización. 
+                    </p>
+                </div>
+                
+                <!-- Columna 2: Enlaces y Estructura -->
+                <div>
+                    <h3 class="font-semibold text-lg text-green-700 mb-2">2. Enlaces (Por $\Delta \text{EN}$)</h3>
+                    <ul class="list-disc ml-4 text-sm text-gray-700 space-y-2">
+                        <li>**Iónico:** $\Delta \text{EN} > 1.7$ (Metal + No Metal, o $\text{NH}_4^+$). Sólido duro, conduce fundido.</li>
+                        <li>**Covalente Polar:** $0.4 < \Delta \text{EN} < 1.7$ (Comparten $e^-$ de forma desigual).</li>
+                        <li>**Covalente No Polar:** $\Delta \text{EN} < 0.4$ (Comparten $e^-$ de forma igual).</li>
+                    </ul>
+
+                    <h3 class="font-semibold text-lg text-green-700 mt-4 mb-2">3. Configuración Electrónica</h3>
+                    <div class="bg-green-50 p-3 rounded-lg text-sm">
+                        <p class="font-mono text-xs break-all text-green-800">
+                            $1s^2, 2s^2, 2p^6, 3s^2, 3p^6, 4s^2, 3d^{10}, 4p^6, 5s^2, 4d^{10}, 5p^6 \ldots$
+                        </p>
+                        <p class="text-xs mt-1 text-gray-600">
+                            El **Periodo** es el $n$ más alto.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    
+    <footer class="mt-10 pt-6 border-t border-gray-300 text-center text-gray-500 text-sm">
+        <p>Resumen de estudio y herramientas de IA integradas. ¡A conquistar el examen!</p>
+    </footer>
+
+    <!-- Script para KaTeX y LLM (Funcionalidad de IA) -->
+    <script>
+        // --- Constantes de la API de Gemini ---
+        const apiKey = ""; // API Key is automatically injected
+        const modelName = "gemini-2.5-flash-preview-09-2025";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+        // --- Función de utilidad para llamadas a la API de Gemini con retroceso exponencial ---
+        async function callGeminiApi(systemInstruction, userQuery) {
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemInstruction }]
+                },
+                tools: [{ "google_search": {} }],
+            };
+
+            let attempt = 0;
+            const maxAttempts = 5;
+
+            while (attempt < maxAttempts) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429 && attempt < maxAttempts - 1) {
+                            const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+                            console.warn(`Rate limit hit (429). Retrying in ${Math.round(delay/1000)}s...`);
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            attempt++;
+                            continue;
+                        }
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Error: No se pudo obtener la respuesta de la IA.";
+                    return text;
+
+                } catch (error) {
+                    console.error("Gemini API error:", error);
+                    return "Error al conectar con el servicio de IA. Intenta de nuevo.";
+                }
+            }
+            return "Error: Se excedió el número máximo de reintentos.";
+        }
+
+        // --- Lógica principal de la aplicación ---
+        document.addEventListener("DOMContentLoaded", function() {
+            // Inicializa KaTeX
+            const katexConfig = {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false},
+                    {left: "\\[", right: "\\]", display: true}
+                ],
+                throwOnError : false
+            };
+            renderMathInElement(document.body, katexConfig);
+
+            // --- 1. Lógica del Calculador de Theta con IA ---
+            const calculateThetaBtn = document.getElementById('calculateThetaBtn');
+            const formulaInput = document.getElementById('formulaInput');
+            const thetaResult = document.getElementById('thetaResult');
+
+            if (calculateThetaBtn) {
+                calculateThetaBtn.addEventListener('click', async () => {
+                    const formula = formulaInput.value.trim();
+                    if (!formula) {
+                        thetaResult.innerHTML = "<p class='text-red-500'>Por favor, introduce una fórmula química.</p>";
+                        return;
+                    }
+
+                    thetaResult.innerHTML = `<p class='text-primary'>Calculando $\theta$ para <b>${formula}</b>... </p>`;
+                    calculateThetaBtn.disabled = true;
+
+                    const systemPrompt = `Actúa como un profesor de química enfocado en el factor de equivalencia (theta). Tu tarea es analizar la fórmula química proporcionada por el usuario y determinar su factor de equivalencia (theta, $\theta$), siguiendo estrictamente estas reglas: 1. Si es un Ácido (empieza con H, como H2SO4): $\theta$ es igual al número de hidrógenos. 2. Si es una Base (termina en OH, como Ca(OH)2): $\theta$ es igual al número de grupos hidroxilo (OH). 3. Si es una Sal (Metal + No Metal, como NaCl o Fe2(SO4)3): $\theta$ es igual a la carga total del metal (ignora el signo). 4. Explica el paso a paso. Utiliza KaTeX para las fórmulas matemáticas, por ejemplo: $H_2SO_4 \\rightarrow \\theta=2$.`;
+
+                    const userQuery = `Analiza la siguiente fórmula química y calcula su factor de equivalencia $\theta$: ${formula}`;
+                    
+                    try {
+                        const resultText = await callGeminiApi(systemPrompt, userQuery);
+                        thetaResult.innerHTML = resultText;
+                        renderMathInElement(thetaResult, katexConfig);
+                    } catch (error) {
+                        thetaResult.innerHTML = "<p class='text-red-500'>Error al calcular. Revisa la consola para más detalles.</p>";
+                    } finally {
+                        calculateThetaBtn.disabled = false;
+                    }
+                });
+            }
+
+            // --- 2. Lógica del Generador de Preguntas REDOX con IA ---
+            const generateRedoxQuizBtn = document.getElementById('generateRedoxQuizBtn');
+            const quizResult = document.getElementById('quizResult');
+
+            if (generateRedoxQuizBtn) {
+                generateRedoxQuizBtn.addEventListener('click', async () => {
+                    quizResult.innerHTML = `<p class='text-accent'>Generando pregunta REDOX... </p>`;
+                    generateRedoxQuizBtn.disabled = true;
+
+                    const systemPrompt = `Eres un tutor de electroquímica. Genera una pregunta de práctica (Problema de cálculo de voltaje O pregunta de Leyes de Faraday O pregunta de definición de Pila/Electrólisis/Ánodo/Cátodo) de nivel intermedio. Proporciona la pregunta primero y, en la última línea, añade la respuesta precedida por: **Respuesta:**. Utiliza KaTeX para cualquier fórmula matemática (Ej: $E^\\circ_{\\text{celda}}$). Asegúrate de incluir los datos necesarios para el cálculo, si aplica.`;
+
+                    const userQuery = "Genera una pregunta de electroquímica para practicar, cubriendo REDOX, Faraday o cálculo de voltaje de celda.";
+                    
+                    try {
+                        const resultText = await callGeminiApi(systemPrompt, userQuery);
+                        quizResult.innerHTML = resultText;
+                        renderMathInElement(quizResult, katexConfig);
+                    } catch (error) {
+                        quizResult.innerHTML = "<p class='text-red-500'>Error al generar la pregunta. Revisa la consola para más detalles.</p>";
+                    } finally {
+                        generateRedoxQuizBtn.disabled = false;
+                    }
+                });
+            }
+
+            // --- 3. Lógica del Calculador de Fórmulas Empíricas con IA ---
+            const calculateEmpiricalBtn = document.getElementById('calculateEmpiricalBtn');
+            const empiricalFormulaInput = document.getElementById('empiricalFormulaInput');
+            const empiricalResult = document.getElementById('empiricalResult');
+
+            if (calculateEmpiricalBtn) {
+                calculateEmpiricalBtn.addEventListener('click', async () => {
+                    const input = empiricalFormulaInput.value.trim();
+                    if (!input) {
+                        empiricalResult.innerHTML = "<p class='text-red-500'>Por favor, introduce porcentajes y elementos (Ej: 40.9%C, 4.59%H, ...).</p>";
+                        return;
+                    }
+
+                    empiricalResult.innerHTML = `<p class='text-darkblue'>Analizando proporciones para **Fórmula Empírica**... </p>`;
+                    calculateEmpiricalBtn.disabled = true;
+
+                    const systemPrompt = `Actúa como un experto en estequiometría. Tu tarea es recibir una lista de porcentajes elementales y, asumiendo una muestra de 100g, calcular la Fórmula Empírica (FE) de ese compuesto. Proporciona la respuesta y el procedimiento paso a paso. Si el usuario proporciona la masa molar, calcula también la Fórmula Molecular (FM). Los pesos atómicos a usar son (aproximados): C=12, H=1, O=16, N=14. Utiliza formato de lista para el procedimiento.`;
+
+                    const userQuery = `Calcula la fórmula empírica y molecular (si se proporciona la masa molar) del compuesto con la siguiente composición: ${input}`;
+                    
+                    try {
+                        const resultText = await callGeminiApi(systemPrompt, userQuery);
+                        empiricalResult.innerHTML = resultText;
+                        renderMathInElement(empiricalResult, katexConfig);
+                    } catch (error) {
+                        empiricalResult.innerHTML = "<p class='text-red-500'>Error al calcular. Revisa la consola para más detalles.</p>";
+                    } finally {
+                        calculateEmpiricalBtn.disabled = false;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
