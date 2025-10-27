@@ -16,6 +16,7 @@
                         'secondary': '#ccfbf1', // Teal-100
                         'accent': '#d97706', // Amber-700
                         'darkblue': '#1e40af', // Blue-800
+                        'warning': '#dc2626', // Red-600
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -62,8 +63,8 @@
     </style>
     <!-- Carga de KaTeX CSS y JS para renderizar fórmulas matemáticas -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" xintegrity="sha384-GvrFq2tJ0t0WbTj1C9l6k6H/T5k0h3S5/E+2w==" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-Fp/mKqW8v1B0yYg0k4F9h1D+xXG5G/L7F3zR5W5F9u+4W9g==" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-vK1YwJb0S4wFj7C7r2M47r2E8F8M7C4D6W5F7D8G5L5H5H8J4G9K8F7L7J9W4R7" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" xintegrity="sha384-Fp/mKqW8v1B0yYg0k4F9h1D+xXG5G/L7F3zR5W5F9u+4W9J" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" xintegrity="sha384-vK1YwJb0S4wF7S9J9W4R7D8G5L5H5H8J4G9K8F7L7J9W4R7" crossorigin="anonymous"></script>
 </head>
 <body class="p-4 md:p-8">
     <header class="text-center mb-10">
@@ -71,6 +72,13 @@
             Química ¡El Kit de Supervivencia!
         </h1>
         <p class="text-xl text-gray-600">Trucos, Fórmulas y Ayudas de IA para Estequiometría, REDOX y Conceptos Clave.</p>
+
+        <!-- **Aviso Importante de la IA** -->
+        <div id="ai-notice" class="mt-4 p-3 bg-red-100 border-l-4 border-warning text-warning text-sm font-medium rounded-lg shadow-md max-w-2xl mx-auto hidden">
+            <p>
+                ⚠️ **Aviso de Herramientas de IA:** Para que las funciones de "Calculadora" y "Generador de Preguntas" funcionen, esta página debe ejecutarse en un entorno que provea la clave de API de Gemini. **No funcionará al abrirlo directamente en tu navegador.**
+            </p>
+        </div>
     </header>
 
     <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -222,8 +230,7 @@
                         </tbody>
                     </table>
                     <p class="text-xs mt-2 italic text-gray-600">
-                        Flúor (F) es el más electronegativo; Cesio (Cs) tiene la menor Energía de Ionización. 
-                    </p>
+                        Flúor (F) es el más electronegativo; Cesio (Cs) tiene la menor Energía de Ionización.                     </p>
                 </div>
                 
                 <!-- Columna 2: Enlaces y Estructura -->
@@ -257,7 +264,9 @@
     <!-- Script para KaTeX y LLM (Funcionalidad de IA) -->
     <script>
         // --- Constantes de la API de Gemini ---
-        const apiKey = ""; // API Key is automatically injected
+        // Nota: La apiKey se deja vacía. En entornos compatibles (como este), se inyecta automáticamente. 
+        // Si el usuario abre el HTML localmente, fallará, por eso se añade el aviso visual.
+        const apiKey = ""; 
         const modelName = "gemini-2.5-flash-preview-09-2025";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
@@ -285,21 +294,25 @@
                     if (!response.ok) {
                         if (response.status === 429 && attempt < maxAttempts - 1) {
                             const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
-                            console.warn(`Rate limit hit (429). Retrying in ${Math.round(delay/1000)}s...`);
+                            // Silently retry, do not log to console for clean user experience
                             await new Promise(resolve => setTimeout(resolve, delay));
                             attempt++;
                             continue;
                         }
-                        throw new Error(`API request failed with status ${response.status}`);
+                        // Explicit error message for the user
+                        const errorMsg = `Error: La llamada a la API falló con estado ${response.status}. Verifica el aviso de la IA.`;
+                        console.error("Gemini API error:", errorMsg);
+                        return errorMsg;
                     }
 
                     const result = await response.json();
-                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Error: No se pudo obtener la respuesta de la IA.";
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Error: No se pudo obtener la respuesta de la IA. Posiblemente la clave de API no está disponible.";
                     return text;
 
                 } catch (error) {
-                    console.error("Gemini API error:", error);
-                    return "Error al conectar con el servicio de IA. Intenta de nuevo.";
+                    // This catches network errors, CORS issues, etc.
+                    console.error("Gemini API network error:", error);
+                    return "Error de conexión de red o entorno. Asegúrate de que la página se ejecute en un entorno compatible (ej. Canvas, no local).";
                 }
             }
             return "Error: Se excedió el número máximo de reintentos.";
@@ -307,6 +320,12 @@
 
         // --- Lógica principal de la aplicación ---
         document.addEventListener("DOMContentLoaded", function() {
+            // Mostrar aviso si la API Key NO está presente (asumiendo ejecución local)
+            const aiNotice = document.getElementById('ai-notice');
+            if (!apiKey) {
+                aiNotice.classList.remove('hidden');
+            }
+
             // Inicializa KaTeX
             const katexConfig = {
                 delimiters: [
@@ -317,7 +336,16 @@
                 ],
                 throwOnError : false
             };
-            renderMathInElement(document.body, katexConfig);
+            // Función para renderizar el contenido matemático
+            const renderMath = (element) => {
+                 try {
+                    renderMathInElement(element, katexConfig);
+                 } catch (e) {
+                     console.error("Error rendering KaTeX:", e);
+                 }
+            };
+
+            renderMath(document.body);
 
             // --- 1. Lógica del Calculador de Theta con IA ---
             const calculateThetaBtn = document.getElementById('calculateThetaBtn');
@@ -328,7 +356,7 @@
                 calculateThetaBtn.addEventListener('click', async () => {
                     const formula = formulaInput.value.trim();
                     if (!formula) {
-                        thetaResult.innerHTML = "<p class='text-red-500'>Por favor, introduce una fórmula química.</p>";
+                        thetaResult.innerHTML = "<p class='text-warning'>Por favor, introduce una fórmula química.</p>";
                         return;
                     }
 
@@ -342,9 +370,10 @@
                     try {
                         const resultText = await callGeminiApi(systemPrompt, userQuery);
                         thetaResult.innerHTML = resultText;
-                        renderMathInElement(thetaResult, katexConfig);
+                        renderMath(thetaResult);
                     } catch (error) {
-                        thetaResult.innerHTML = "<p class='text-red-500'>Error al calcular. Revisa la consola para más detalles.</p>";
+                        // Managed inside callGeminiApi, but good to have fallback
+                        thetaResult.innerHTML = "<p class='text-warning'>Error al calcular. Revisa la consola o el aviso de la IA.</p>";
                     } finally {
                         calculateThetaBtn.disabled = false;
                     }
@@ -367,9 +396,9 @@
                     try {
                         const resultText = await callGeminiApi(systemPrompt, userQuery);
                         quizResult.innerHTML = resultText;
-                        renderMathInElement(quizResult, katexConfig);
+                        renderMath(quizResult);
                     } catch (error) {
-                        quizResult.innerHTML = "<p class='text-red-500'>Error al generar la pregunta. Revisa la consola para más detalles.</p>";
+                        quizResult.innerHTML = "<p class='text-warning'>Error al generar la pregunta. Revisa la consola o el aviso de la IA.</p>";
                     } finally {
                         generateRedoxQuizBtn.disabled = false;
                     }
@@ -385,7 +414,7 @@
                 calculateEmpiricalBtn.addEventListener('click', async () => {
                     const input = empiricalFormulaInput.value.trim();
                     if (!input) {
-                        empiricalResult.innerHTML = "<p class='text-red-500'>Por favor, introduce porcentajes y elementos (Ej: 40.9%C, 4.59%H, ...).</p>";
+                        empiricalResult.innerHTML = "<p class='text-warning'>Por favor, introduce porcentajes y elementos (Ej: 40.9%C, 4.59%H, ...).</p>";
                         return;
                     }
 
@@ -399,9 +428,9 @@
                     try {
                         const resultText = await callGeminiApi(systemPrompt, userQuery);
                         empiricalResult.innerHTML = resultText;
-                        renderMathInElement(empiricalResult, katexConfig);
+                        renderMath(empiricalResult);
                     } catch (error) {
-                        empiricalResult.innerHTML = "<p class='text-red-500'>Error al calcular. Revisa la consola para más detalles.</p>";
+                        empiricalResult.innerHTML = "<p class='text-warning'>Error al calcular. Revisa la consola o el aviso de la IA.</p>";
                     } finally {
                         calculateEmpiricalBtn.disabled = false;
                     }
